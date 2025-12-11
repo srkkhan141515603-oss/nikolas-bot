@@ -1945,6 +1945,7 @@ export default function NikolasCompleteAlgorithmBot() {
                     <option value="R_50">Volatility 50 Index</option>
                     <option value="R_25">Volatility 25 Index</option>
                     <option value="R_10">Volatility 10 Index</option>
+                    <option value="stpRNG">Step Index 100</option>
                   </select>
                 </div>
 
@@ -1971,6 +1972,7 @@ export default function NikolasCompleteAlgorithmBot() {
                       disabled={isTrading}
                     >
                       <option value="5">5 Ticks (Fast)</option>
+                      <option value="6">6 Ticks (Balanced)</option>
                       <option value="7">7 Ticks (Recommended)</option>
                       <option value="10">10 Ticks (Safe)</option>
                       <option value="12">12 Ticks (Very Safe)</option>
@@ -2290,6 +2292,51 @@ export default function NikolasCompleteAlgorithmBot() {
               {ticks.length === 0 && (
                 <p className="text-slate-400 text-center py-8">⏳ Waiting for tick data...</p>
               )}
+            </div>
+
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg shadow-xl p-6 border border-green-500/20">
+              <h2 className="text-xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-4">📈 Step Index 100 Chart</h2>
+              <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
+                {ticks.length > 0 ? (
+                  <div>
+                    <div className="grid grid-cols-10 gap-1 mb-4">
+                      {ticks.slice(-100).map((tick, idx) => (
+                        <div
+                          key={idx}
+                          className={`h-8 rounded-sm transition-all hover:scale-110 ${
+                            tick.color === 'blue' ? 'bg-cyan-500 hover:bg-cyan-400' : 'bg-orange-500 hover:bg-orange-400'
+                          }`}
+                          title={`Tick ${ticks.length - 100 + idx + 1}: ${tick.digit} (${isOdd(tick.digit) ? 'Odd' : 'Even'})`}
+                        >
+                          <div className="flex items-center justify-center h-full text-xs font-bold text-white">
+                            {tick.digit}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="text-xs text-slate-400 text-center">
+                      📊 Showing last {Math.min(100, ticks.length)} ticks
+                      {ticks.length > 100 && ` (of ${ticks.length} total)`}
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                      <div className="bg-slate-800 p-2 rounded">
+                        <span className="text-slate-400">🔵 Even (Blue):</span>
+                        <span className="text-cyan-300 font-bold ml-1">
+                          {ticks.slice(-100).filter(t => isEven(t.digit)).length}
+                        </span>
+                      </div>
+                      <div className="bg-slate-800 p-2 rounded">
+                        <span className="text-slate-400">🟠 Odd (Orange):</span>
+                        <span className="text-orange-300 font-bold ml-1">
+                          {ticks.slice(-100).filter(t => isOdd(t.digit)).length}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-400 text-center py-8">⏳ Waiting for 100 ticks to display chart...</p>
+                )}
+              </div>
             </div>
           </div>
 
